@@ -4,8 +4,10 @@ import Database from 'better-sqlite3';
 import { join } from 'path';
 
 import * as schema from './schema';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { type z } from 'zod';
 
-// For Node.js environments (API routes, etc.)
+// Create a singleton
 let db: ReturnType<typeof createDrizzleClient>;
 
 export function createDrizzleClient() {
@@ -27,5 +29,24 @@ export function runMigrations() {
   migrate(db, { migrationsFolder: join(process.cwd(), 'drizzle') });
   return db;
 }
+
+// Zod schemas for validation
+export const insertBoardSchema = createInsertSchema(schema.boards);
+export const selectBoardSchema = createSelectSchema(schema.boards);
+
+export const insertListSchema = createInsertSchema(schema.lists);
+export const selectListSchema = createSelectSchema(schema.lists);
+
+export const insertCardSchema = createInsertSchema(schema.cards);
+export const selectCardSchema = createSelectSchema(schema.cards);
+
+export type InsertBoard = z.infer<typeof insertBoardSchema>;
+export type SelectBoard = z.infer<typeof selectBoardSchema>;
+
+export type InsertList = z.infer<typeof insertListSchema>;
+export type SelectList = z.infer<typeof selectListSchema>;
+
+export type InsertCard = z.infer<typeof insertCardSchema>;
+export type SelectCard = z.infer<typeof selectCardSchema>;
 
 export { schema };
