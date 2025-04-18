@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { db } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { getDb, schema } from "@/db";
 import { BoardHeader } from "@/components/board/board-header";
 import { ListContainer } from "@/components/board/list-container";
 
@@ -10,20 +11,16 @@ interface BoardPageProps {
 }
 
 export default async function BoardPage({ params }: BoardPageProps) {
-  const board = await db.board.findUnique({
-    where: {
-      id: params.boardId,
-    },
-    include: {
+  const db = getDb();
+  
+  const board = await db.query.boards.findFirst({
+    where: eq(schema.boards.id, params.boardId),
+    with: {
       lists: {
-        orderBy: {
-          order: "asc",
-        },
-        include: {
+        orderBy: (lists, { asc }) => [asc(lists.order)],
+        with: {
           cards: {
-            orderBy: {
-              order: "asc",
-            },
+            orderBy: (cards, { asc }) => [asc(cards.order)],
           },
         },
       },
