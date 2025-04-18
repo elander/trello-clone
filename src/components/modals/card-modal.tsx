@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { X, Trash2, Calendar } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
-import { useCardModal } from "@/hooks/use-card-modal";
+import { useCardModal } from "@/contexts/CardModalContext";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -85,7 +85,7 @@ export function CardModal() {
             <label className="text-sm font-medium">Title</label>
             <input
               name="title"
-              defaultValue={card.title}
+              defaultValue={card.title || ""}
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
