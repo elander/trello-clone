@@ -7,6 +7,7 @@ A fully functional Trello clone built with:
 - Tailwind CSS
 - SQLite database (for local development)
 - Drizzle ORM
+- React Context API for state management
 
 ## Features
 - Drag and drop kanban board
@@ -59,7 +60,7 @@ This project uses SQLite for local development with Drizzle as the ORM. The data
 ### Frontend
 - **React and Next.js**: For rendering the UI and handling routing
 - **@hello-pangea/dnd**: For drag and drop functionality
-- **Zustand**: For state management
+- **React Context API**: For state management
 - **shadcn/ui**: For UI components
 - **Tailwind CSS**: For styling
 
@@ -68,11 +69,10 @@ This project uses SQLite for local development with Drizzle as the ORM. The data
 - **Drizzle ORM**: For database operations and schema definition
 - **SQLite (better-sqlite3)**: For local database storage
 
-### Drizzle ORM
-- Type-safe database operations
-- Declarative schema definitions
-- SQL query builder
-- Migration tooling
+### State Management
+- **React Context API**: Used for global state management
+  - `CardModalContext`: Manages the state of the card modal
+  - `BoardContext`: Manages the state of lists and cards on the board
 
 ## License
 
