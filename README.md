@@ -6,6 +6,7 @@ A fully functional Trello clone built with:
 - shadcn/ui components
 - Tailwind CSS
 - SQLite database (for local development)
+- Drizzle ORM
 
 ## Features
 - Drag and drop kanban board
@@ -27,15 +28,15 @@ A fully functional Trello clone built with:
    npm install
    ```
 
-3. Set up the database with Prisma
+3. Set up the database with Drizzle
    ```bash
-   npx prisma generate
-   npm run db:migrate
+   npm run db:generate
+   npm run db:push
    ```
 
 4. Seed the database with initial data (optional)
    ```bash
-   npx prisma db seed
+   node -r esbuild-register src/db/seed.ts
    ```
 
 5. Run the development server
@@ -47,7 +48,7 @@ A fully functional Trello clone built with:
 
 ## Database Structure
 
-This project uses SQLite for local development with Prisma as the ORM. The database schema includes:
+This project uses SQLite for local development with Drizzle as the ORM. The database schema includes:
 
 - `Board`: Container for lists
 - `List`: Container for cards within a board
@@ -64,8 +65,14 @@ This project uses SQLite for local development with Prisma as the ORM. The datab
 
 ### Backend
 - **Next.js API Routes**: For handling API requests
-- **Prisma**: For database operations
-- **SQLite**: For local database storage
+- **Drizzle ORM**: For database operations and schema definition
+- **SQLite (better-sqlite3)**: For local database storage
+
+### Drizzle ORM
+- Type-safe database operations
+- Declarative schema definitions
+- SQL query builder
+- Migration tooling
 
 ## License
 
