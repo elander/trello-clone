@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { getDb, schema } from "@/db";
 
 export async function PATCH(
   req: Request,
@@ -8,12 +9,11 @@ export async function PATCH(
   try {
     const { boardId } = params;
     const { title } = await req.json();
+    const db = getDb();
 
     // Check if the board exists
-    const board = await db.board.findUnique({
-      where: {
-        id: boardId,
-      },
+    const board = await db.query.boards.findFirst({
+      where: eq(schema.boards.id, boardId),
     });
 
     if (!board) {
@@ -21,14 +21,10 @@ export async function PATCH(
     }
 
     // Update the board title
-    const updatedBoard = await db.board.update({
-      where: {
-        id: boardId,
-      },
-      data: {
-        title,
-      },
-    });
+    const [updatedBoard] = await db.update(schema.boards)
+      .set({ title })
+      .where(eq(schema.boards.id, boardId))
+      .returning();
 
     return NextResponse.json(updatedBoard);
   } catch (error) {
