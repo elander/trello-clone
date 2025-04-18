@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { getDb, schema } from "@/db";
 
 export async function PUT(
   req: Request,
@@ -8,12 +9,11 @@ export async function PUT(
   try {
     const { listId } = params;
     const { cards } = await req.json();
+    const db = getDb();
 
     // Verify the list exists
-    const list = await db.list.findUnique({
-      where: {
-        id: listId,
-      },
+    const list = await db.query.lists.findFirst({
+      where: eq(schema.lists.id, listId),
     });
 
     if (!list) {
@@ -22,14 +22,9 @@ export async function PUT(
 
     // Update the order of each card
     for (const card of cards) {
-      await db.card.update({
-        where: {
-          id: card.id,
-        },
-        data: {
-          order: card.order,
-        },
-      });
+      await db.update(schema.cards)
+        .set({ order: card.order })
+        .where(eq(schema.cards.id, card.id));
     }
 
     return NextResponse.json({ success: true });

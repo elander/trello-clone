@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { getDb, schema } from "@/db";
 
 export async function POST(
   req: Request,
@@ -8,18 +9,15 @@ export async function POST(
   try {
     const { listId } = params;
     const { title } = await req.json();
+    const db = getDb();
 
     // Verify the list exists
-    const list = await db.list.findUnique({
-      where: {
-        id: listId,
-      },
-      include: {
+    const list = await db.query.lists.findFirst({
+      where: eq(schema.lists.id, listId),
+      with: {
         cards: {
-          orderBy: {
-            order: "desc",
-          },
-          take: 1,
+          orderBy: (cards, { desc }) => [desc(cards.order)],
+          limit: 1,
         },
       },
     });
@@ -29,16 +27,16 @@ export async function POST(
     }
 
     // Calculate the order for the new card
-    const order = list.cards.length > 0 ? list.cards[0].order + 1 : 0;
+    const order = list.cards && list.cards.length > 0 ? list.cards[0].order + 1 : 0;
 
     // Create the card
-    const card = await db.card.create({
-      data: {
+    const [card] = await db.insert(schema.cards)
+      .values({
         title,
         order,
         listId,
-      },
-    });
+      })
+      .returning();
 
     return NextResponse.json(card, { status: 201 });
   } catch (error) {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { eq, and } from "drizzle-orm";
+import { getDb, schema } from "@/db";
 
 export async function PATCH(
   req: Request,
@@ -8,13 +9,14 @@ export async function PATCH(
   try {
     const { boardId, listId } = params;
     const { title } = await req.json();
+    const db = getDb();
 
     // Check if the list exists and belongs to the board
-    const list = await db.list.findUnique({
-      where: {
-        id: listId,
-        boardId,
-      },
+    const list = await db.query.lists.findFirst({
+      where: and(
+        eq(schema.lists.id, listId),
+        eq(schema.lists.boardId, boardId)
+      ),
     });
 
     if (!list) {
@@ -22,14 +24,10 @@ export async function PATCH(
     }
 
     // Update the list title
-    const updatedList = await db.list.update({
-      where: {
-        id: listId,
-      },
-      data: {
-        title,
-      },
-    });
+    const [updatedList] = await db.update(schema.lists)
+      .set({ title })
+      .where(eq(schema.lists.id, listId))
+      .returning();
 
     return NextResponse.json(updatedList);
   } catch (error) {
@@ -44,13 +42,14 @@ export async function DELETE(
 ) {
   try {
     const { boardId, listId } = params;
+    const db = getDb();
 
     // Check if the list exists and belongs to the board
-    const list = await db.list.findUnique({
-      where: {
-        id: listId,
-        boardId,
-      },
+    const list = await db.query.lists.findFirst({
+      where: and(
+        eq(schema.lists.id, listId),
+        eq(schema.lists.boardId, boardId)
+      ),
     });
 
     if (!list) {
@@ -58,21 +57,13 @@ export async function DELETE(
     }
 
     // Get all lists to reorder them after deletion
-    const lists = await db.list.findMany({
-      where: {
-        boardId,
-      },
-      orderBy: {
-        order: "asc",
-      },
+    const lists = await db.query.lists.findMany({
+      where: eq(schema.lists.boardId, boardId),
+      orderBy: (lists, { asc }) => [asc(lists.order)],
     });
 
     // Delete the list
-    await db.list.delete({
-      where: {
-        id: listId,
-      },
-    });
+    await db.delete(schema.lists).where(eq(schema.lists.id, listId));
 
     // Reorder remaining lists
     const reorderedLists = lists
@@ -84,14 +75,9 @@ export async function DELETE(
 
     // Update the order of remaining lists
     for (const list of reorderedLists) {
-      await db.list.update({
-        where: {
-          id: list.id,
-        },
-        data: {
-          order: list.order,
-        },
-      });
+      await db.update(schema.lists)
+        .set({ order: list.order })
+        .where(eq(schema.lists.id, list.id));
     }
 
     return NextResponse.json({ success: true });

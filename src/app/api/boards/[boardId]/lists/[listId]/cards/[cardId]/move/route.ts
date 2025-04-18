@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { eq, and } from "drizzle-orm";
+import { getDb, schema } from "@/db";
 
 export async function PUT(
   req: Request,
@@ -8,13 +9,14 @@ export async function PUT(
   try {
     const { listId, cardId } = params;
     const { destinationListId, position } = await req.json();
+    const db = getDb();
 
     // Verify the card exists and belongs to the source list
-    const card = await db.card.findUnique({
-      where: {
-        id: cardId,
-        listId,
-      },
+    const card = await db.query.cards.findFirst({
+      where: and(
+        eq(schema.cards.id, cardId),
+        eq(schema.cards.listId, listId)
+      ),
     });
 
     if (!card) {
@@ -22,10 +24,8 @@ export async function PUT(
     }
 
     // Verify the destination list exists
-    const destinationList = await db.list.findUnique({
-      where: {
-        id: destinationListId,
-      },
+    const destinationList = await db.query.lists.findFirst({
+      where: eq(schema.lists.id, destinationListId),
     });
 
     if (!destinationList) {
@@ -33,13 +33,9 @@ export async function PUT(
     }
 
     // Get all cards in the destination list
-    const destinationCards = await db.card.findMany({
-      where: {
-        listId: destinationListId,
-      },
-      orderBy: {
-        order: "asc",
-      },
+    const destinationCards = await db.query.cards.findMany({
+      where: eq(schema.cards.listId, destinationListId),
+      orderBy: (cards, { asc }) => [asc(cards.order)],
     });
 
     // Insert card at position and shift others
@@ -59,27 +55,19 @@ export async function PUT(
     }));
 
     // Update the card's list ID and order
-    await db.card.update({
-      where: {
-        id: cardId,
-      },
-      data: {
+    await db.update(schema.cards)
+      .set({
         listId: destinationListId,
         order: cardsToUpdate.find((c) => c.id === cardId)?.order || position,
-      },
-    });
+      })
+      .where(eq(schema.cards.id, cardId));
 
     // Update the order of all cards in the destination list
     for (const card of cardsToUpdate) {
       if (card.id !== cardId) {
-        await db.card.update({
-          where: {
-            id: card.id,
-          },
-          data: {
-            order: card.order,
-          },
-        });
+        await db.update(schema.cards)
+          .set({ order: card.order })
+          .where(eq(schema.cards.id, card.id));
       }
     }
 
