@@ -2,17 +2,17 @@
 
 import { Draggable } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
-import { useCardModal } from "@/hooks/use-card-modal";
+import { Card } from "@/db/schema";
+import { useCardModal } from "@/contexts/CardModalContext";
 
 interface CardItemProps {
   index: number;
-  card: any;
+  card: Card;
   listId: string;
 }
 
 export function CardItem({ index, card, listId }: CardItemProps) {
-  const cardModal = useCardModal();
+  const { onOpen } = useCardModal();
 
   return (
     <Draggable draggableId={card.id} index={index}>
@@ -25,7 +25,7 @@ export function CardItem({ index, card, listId }: CardItemProps) {
             "truncate py-2 px-3 text-sm bg-white dark:bg-slate-700 rounded-md shadow-sm border-2 border-transparent",
             snapshot.isDragging && "dragging-card"
           )}
-          onClick={() => cardModal.onOpen(card, listId)}
+          onClick={() => onOpen(card, listId)}
         >
           {card.title}
         </div>
