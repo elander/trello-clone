@@ -1,5 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 
 export const boards = sqliteTable('boards', {
   id: text('id').primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
@@ -11,6 +12,10 @@ export const boards = sqliteTable('boards', {
     .notNull()
     .default(sql`(strftime('%s', 'now'))`),
 });
+
+export const boardRelations = relations(boards, ({ many }) => ({
+  lists: many(lists),
+}));
 
 export const lists = sqliteTable('lists', {
   id: text('id').primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
@@ -26,6 +31,14 @@ export const lists = sqliteTable('lists', {
     .notNull()
     .references(() => boards.id, { onDelete: 'cascade' }),
 });
+
+export const listRelations = relations(lists, ({ one, many }) => ({
+  board: one(boards, {
+    fields: [lists.boardId],
+    references: [boards.id],
+  }),
+  cards: many(cards),
+}));
 
 export const cards = sqliteTable('cards', {
   id: text('id').primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
@@ -43,6 +56,13 @@ export const cards = sqliteTable('cards', {
     .notNull()
     .references(() => lists.id, { onDelete: 'cascade' }),
 });
+
+export const cardRelations = relations(cards, ({ one }) => ({
+  list: one(lists, {
+    fields: [cards.listId],
+    references: [lists.id],
+  }),
+}));
 
 export type Board = typeof boards.$inferSelect;
 export type NewBoard = typeof boards.$inferInsert;
