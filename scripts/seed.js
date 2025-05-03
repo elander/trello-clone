@@ -12,11 +12,14 @@ async function main() {
     // Begin transaction
     db.prepare('BEGIN TRANSACTION').run();
 
+    // Get current timestamp
+    const now = Math.floor(Date.now() / 1000);
+
     // Create a board
     const boardId = randomUUID();
     db.prepare(
-      'INSERT INTO boards (id, title, created_at, updated_at) VALUES (?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(boardId, 'My First Board');
+      'INSERT INTO boards (id, title, created_at, updated_at) VALUES (?, ?, ?, ?)'
+    ).run(boardId, 'My First Board', now, now);
     
     console.log(`Created board with ID: ${boardId}`);
     
@@ -26,33 +29,33 @@ async function main() {
     const doneId = randomUUID();
     
     db.prepare(
-      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(todoId, 'To Do', 0, boardId);
+      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(todoId, 'To Do', 0, boardId, now, now);
     
     db.prepare(
-      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(inProgressId, 'In Progress', 1, boardId);
+      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(inProgressId, 'In Progress', 1, boardId, now, now);
     
     db.prepare(
-      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(doneId, 'Done', 2, boardId);
+      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(doneId, 'Done', 2, boardId, now, now);
     
     // Create cards
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(randomUUID(), 'Research user requirements', 'Conduct user interviews and gather requirements', 0, todoId);
+      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(randomUUID(), 'Research user requirements', 'Conduct user interviews and gather requirements', 0, todoId, now, now);
     
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(randomUUID(), 'Create wireframes', 'Design initial wireframes for the application', 1, todoId);
+      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(randomUUID(), 'Create wireframes', 'Design initial wireframes for the application', 1, todoId, now, now);
     
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(randomUUID(), 'Implement authentication', 'Set up user authentication with JWT', 0, inProgressId);
+      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(randomUUID(), 'Implement authentication', 'Set up user authentication with JWT', 0, inProgressId, now, now);
     
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, strftime("%s", "now"), strftime("%s", "now"))'
-    ).run(randomUUID(), 'Project setup', 'Initialize the project with Next.js and Tailwind CSS', 0, doneId);
+      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(randomUUID(), 'Project setup', 'Initialize the project with Next.js and Tailwind CSS', 0, doneId, now, now);
     
     // Commit the transaction
     db.prepare('COMMIT').run();
