@@ -22,7 +22,7 @@ export function CardItem({ index, card, listId }: CardItemProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className={cn(
-            "truncate py-2 px-3 text-sm bg-white dark:bg-slate-700 rounded-md shadow-sm border-2 border-transparent",
+            "truncate py-2 px-3 text-sm bg-white dark:bg-slate-600 text-gray-800 dark:text-white rounded-md shadow-sm border-2 border-transparent font-medium",
             snapshot.isDragging && "dragging-card"
           )}
           onClick={() => onOpen(card, listId)}
