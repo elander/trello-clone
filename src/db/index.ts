@@ -5,7 +5,6 @@ import { join } from 'path';
 
 import * as schema from './schema';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { type z } from 'zod';
 
 // Create a singleton
 let db: ReturnType<typeof createDrizzleClient>;
@@ -39,14 +38,5 @@ export const selectListSchema = createSelectSchema(schema.lists);
 
 export const insertCardSchema = createInsertSchema(schema.cards);
 export const selectCardSchema = createSelectSchema(schema.cards);
-
-export type InsertBoard = z.infer<typeof insertBoardSchema>;
-export type SelectBoard = z.infer<typeof selectBoardSchema>;
-
-export type InsertList = z.infer<typeof insertListSchema>;
-export type SelectList = z.infer<typeof selectListSchema>;
-
-export type InsertCard = z.infer<typeof insertCardSchema>;
-export type SelectCard = z.infer<typeof selectCardSchema>;
 
 export { schema };
