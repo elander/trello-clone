@@ -5,6 +5,7 @@ export default {
   schema: './src/db/schema.ts',
   out: './drizzle',
   driver: 'better-sqlite',
+  dialect: 'sqlite',
   dbCredentials: {
     url: join(process.cwd(), 'sqlite.db'),
   },
