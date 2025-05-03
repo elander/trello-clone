@@ -131,12 +131,12 @@ export function ListHeader({
             onChange={onTitleChange}
             onBlur={onBlur}
             onKeyDown={onKeyDown}
-            className="w-full px-2 py-1 text-sm font-medium border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-2 py-1 text-sm font-medium border rounded bg-white dark:bg-slate-600 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         ) : (
           <button
             onClick={enableEditing}
-            className="w-full px-2 py-1 text-sm font-medium text-left hover:bg-white/50 dark:hover:bg-slate-700/50 rounded"
+            className="w-full px-2 py-1 text-sm font-medium text-left hover:bg-black/5 dark:hover:bg-white/10 rounded text-gray-800 dark:text-white"
           >
             {list.title}
           </button>
@@ -145,18 +145,18 @@ export function ListHeader({
       <Popover>
         <PopoverTrigger asChild>
           <Button className="h-auto w-auto p-1" variant="ghost">
-            <MoreHorizontal className="h-4 w-4" />
+            <MoreHorizontal className="h-4 w-4 text-gray-500 dark:text-gray-300" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="px-0 pt-3 pb-0" side="bottom" align="end">
-          <div className="text-sm font-medium text-center text-neutral-600 dark:text-neutral-300 pb-3">
+          <div className="text-sm font-medium text-center text-gray-700 dark:text-gray-200 pb-3">
             List actions
           </div>
           <div className="flex flex-col">
             <PopoverClose asChild>
               <Button
                 onClick={onAddCard}
-                className="w-full h-auto p-2 px-5 justify-start font-normal text-sm rounded-none hover:bg-slate-100 dark:hover:bg-slate-700"
+                className="w-full h-auto p-2 px-5 justify-start font-normal text-sm rounded-none text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
                 variant="ghost"
               >
                 Add card...
@@ -165,7 +165,7 @@ export function ListHeader({
             <PopoverClose asChild>
               <Button
                 onClick={handleCopyList}
-                className="w-full h-auto p-2 px-5 justify-start font-normal text-sm rounded-none hover:bg-slate-100 dark:hover:bg-slate-700"
+                className="w-full h-auto p-2 px-5 justify-start font-normal text-sm rounded-none text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
                 variant="ghost"
               >
                 Copy list...
@@ -174,7 +174,7 @@ export function ListHeader({
             <PopoverClose asChild>
               <Button
                 onClick={onDelete}
-                className="w-full h-auto p-2 px-5 justify-start font-normal text-sm rounded-none text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20"
+                className="w-full h-auto p-2 px-5 justify-start font-normal text-sm rounded-none text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                 variant="ghost"
               >
                 Delete this list
