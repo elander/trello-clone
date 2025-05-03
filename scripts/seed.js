@@ -29,32 +29,32 @@ async function main() {
     const doneId = randomUUID();
     
     db.prepare(
-      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO lists (id, title, "order", board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
     ).run(todoId, 'To Do', 0, boardId, now, now);
     
     db.prepare(
-      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO lists (id, title, "order", board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
     ).run(inProgressId, 'In Progress', 1, boardId, now, now);
     
     db.prepare(
-      'INSERT INTO lists (id, title, order, board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO lists (id, title, "order", board_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
     ).run(doneId, 'Done', 2, boardId, now, now);
     
     // Create cards
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO cards (id, title, description, "order", list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
     ).run(randomUUID(), 'Research user requirements', 'Conduct user interviews and gather requirements', 0, todoId, now, now);
     
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO cards (id, title, description, "order", list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
     ).run(randomUUID(), 'Create wireframes', 'Design initial wireframes for the application', 1, todoId, now, now);
     
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO cards (id, title, description, "order", list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
     ).run(randomUUID(), 'Implement authentication', 'Set up user authentication with JWT', 0, inProgressId, now, now);
     
     db.prepare(
-      'INSERT INTO cards (id, title, description, order, list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      'INSERT INTO cards (id, title, description, "order", list_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
     ).run(randomUUID(), 'Project setup', 'Initialize the project with Next.js and Tailwind CSS', 0, doneId, now, now);
     
     // Commit the transaction
