@@ -50,10 +50,10 @@ export function BoardHeader({ board }: BoardHeaderProps) {
   };
 
   return (
-    <div className="w-full h-14 z-[40] bg-black/50 fixed top-0 left-0 flex items-center px-6 gap-x-4 text-white">
+    <div className="w-full h-14 z-[40] bg-blue-700/90 dark:bg-slate-900/90 fixed top-0 left-0 flex items-center px-6 gap-x-4 text-white">
       {isEditing ? (
         <input
-          className="bg-transparent focus-visible:outline-none font-bold text-xl px-2 py-1 border rounded"
+          className="bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus-visible:outline-none font-bold text-xl px-2 py-1 border rounded"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onBlur={onBlur}
@@ -63,7 +63,7 @@ export function BoardHeader({ board }: BoardHeaderProps) {
       ) : (
         <button
           onClick={() => setIsEditing(true)}
-          className="font-bold text-xl hover:underline"
+          className="font-bold text-xl hover:underline text-white"
         >
           {board.title}
         </button>
