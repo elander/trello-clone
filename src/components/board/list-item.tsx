@@ -43,7 +43,7 @@ export function ListItem({ list, index, boardId }: ListItemProps) {
           {...provided.draggableProps}
         >
           <div
-            className="w-full rounded-md bg-[#f1f2f4] dark:bg-slate-800 shadow-md pb-2"
+            className="w-full rounded-md bg-[#f8f9fa] dark:bg-slate-700 shadow-md pb-2"
           >
             <ListHeader 
               onAddCard={enableEditing}
