@@ -67,13 +67,13 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
         <form
           ref={formRef}
           onSubmit={onSubmit}
-          className="m-1 p-3 space-y-4 bg-white dark:bg-slate-700 rounded-md shadow-sm"
+          className="m-1 p-3 space-y-4 bg-white dark:bg-slate-600 rounded-md shadow-sm"
         >
           <textarea
             ref={ref}
             name="title"
             onKeyDown={onKeyDown}
-            className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full px-2 py-1 text-sm border rounded text-gray-800 dark:text-white bg-white dark:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             placeholder="Enter a title for this card..."
             required
           />
@@ -93,7 +93,7 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
       <div className="pt-2 px-2">
         <Button
           onClick={enableEditing}
-          className="h-auto px-2 py-1.5 w-full justify-start text-muted-foreground text-sm"
+          className="h-auto px-2 py-1.5 w-full justify-start text-gray-700 dark:text-gray-200 text-sm bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20"
           size="sm"
           variant="ghost"
         >
