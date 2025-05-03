@@ -32,7 +32,7 @@ export default async function BoardPage({ params }: BoardPageProps) {
   }
 
   return (
-    <div className="h-full bg-slate-100 dark:bg-slate-900 overflow-x-auto p-4">
+    <div className="h-full bg-blue-50 dark:bg-slate-800 overflow-x-auto p-4">
       <BoardHeader board={board} />
       <ListContainer board={board} boardId={params.boardId} />
     </div>
